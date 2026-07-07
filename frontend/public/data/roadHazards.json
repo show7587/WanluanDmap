@@ -34,5 +34,17 @@
     "description": "溪水暴漲",
     "reportedAt": "2026-07-07T14:24:18.3850305+08:00",
     "updatedAt": "2026-07-07T14:24:59.4517211+08:00"
+  },
+  {
+    "id": 4,
+    "location": "萬巒國小",
+    "latitude": 22.571930798463427,
+    "longitude": 120.5730375283398,
+    "hazardType": "Landslide",
+    "severity": "Light",
+    "status": "Active",
+    "description": "GG",
+    "reportedAt": "2026-07-07T16:55:47.1534742+08:00",
+    "updatedAt": "2026-07-07T16:55:47.1534777+08:00"
   }
 ]
