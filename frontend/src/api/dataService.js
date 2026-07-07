@@ -10,7 +10,10 @@
  * because GitHub Pages is static and has no backend.
  */
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
+// Dev-only calls go through the Vite dev proxy (vite.config.mjs maps /api ->
+// http://localhost:5180). Using a relative path keeps every request same-origin,
+// so there is no CORS to configure and it keeps working even if Vite picks a
+// different port (e.g. 3456 when 3455 is taken).
 
 function unwrap (apiResult) {
   // Backend serializes ApiResult<T> with the default ASP.NET Core camelCase policy.
@@ -36,7 +39,7 @@ export async function fetchHazards () {
 }
 
 export async function createHazard (payload) {
-  const response = await fetch(`${apiBaseUrl}/api/RoadHazard`, {
+  const response = await fetch('/api/RoadHazard', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -45,7 +48,7 @@ export async function createHazard (payload) {
 }
 
 export async function updateHazard (id, payload) {
-  const response = await fetch(`${apiBaseUrl}/api/RoadHazard/${id}`, {
+  const response = await fetch(`/api/RoadHazard/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -54,7 +57,7 @@ export async function updateHazard (id, payload) {
 }
 
 export async function removeHazard (id) {
-  const response = await fetch(`${apiBaseUrl}/api/RoadHazard/${id}`, {
+  const response = await fetch(`/api/RoadHazard/${id}`, {
     method: 'DELETE',
   })
   return unwrap(await response.json())
@@ -63,7 +66,7 @@ export async function removeHazard (id) {
 export async function uploadPhoto (file) {
   const formData = new FormData()
   formData.append('file', file)
-  const response = await fetch(`${apiBaseUrl}/api/Photo`, {
+  const response = await fetch('/api/Photo', {
     method: 'POST',
     body: formData,
   })
@@ -71,6 +74,12 @@ export async function uploadPhoto (file) {
 }
 
 export async function fetchHazardsFromApi () {
-  const response = await fetch(`${apiBaseUrl}/api/RoadHazard`)
+  let response
+  try {
+    response = await fetch('/api/RoadHazard')
+  } catch {
+    // A network error here almost always means the local backend isn't running.
+    throw new Error('無法連線到本機後端，請先啟動後端（cd backend && dotnet run）。')
+  }
   return unwrap(await response.json())
 }
