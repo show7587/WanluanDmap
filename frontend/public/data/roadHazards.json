@@ -8,6 +8,7 @@
     "severity": "Moderate",
     "status": "Active",
     "description": "橋面積水，請改道行駛。",
+    "photo": null,
     "reportedAt": "2026-07-07T08:00:00",
     "updatedAt": "2026-07-07T08:00:00"
   },
@@ -20,6 +21,7 @@
     "severity": "Severe",
     "status": "Active",
     "description": "邊坡崩塌，全線封閉，請勿通行。",
+    "photo": null,
     "reportedAt": "2026-07-07T09:30:00",
     "updatedAt": "2026-07-07T09:30:00"
   },
@@ -32,6 +34,7 @@
     "severity": "Moderate",
     "status": "Active",
     "description": "溪水暴漲",
+    "photo": null,
     "reportedAt": "2026-07-07T14:24:18.3850305+08:00",
     "updatedAt": "2026-07-07T14:24:59.4517211+08:00"
   },
@@ -44,6 +47,7 @@
     "severity": "Light",
     "status": "Active",
     "description": "GG",
+    "photo": null,
     "reportedAt": "2026-07-07T16:55:47.1534742+08:00",
     "updatedAt": "2026-07-07T16:55:47.1534777+08:00"
   }

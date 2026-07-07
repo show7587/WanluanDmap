@@ -60,6 +60,16 @@ export async function removeHazard (id) {
   return unwrap(await response.json())
 }
 
+export async function uploadPhoto (file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const response = await fetch(`${apiBaseUrl}/api/Photo`, {
+    method: 'POST',
+    body: formData,
+  })
+  return unwrap(await response.json())
+}
+
 export async function fetchHazardsFromApi () {
   const response = await fetch(`${apiBaseUrl}/api/RoadHazard`)
   return unwrap(await response.json())

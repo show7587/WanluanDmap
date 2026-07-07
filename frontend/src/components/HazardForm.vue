@@ -13,6 +13,16 @@
     <v-select v-model="form.severity" :items="severityOptions" item-title="text" item-value="value" :label="$t('field.severity')" required />
     <v-select v-model="form.status" :items="statusOptions" item-title="text" item-value="value" :label="$t('field.status')" required />
     <v-textarea v-model="form.description" :label="$t('field.description')" />
+    <v-file-input
+      accept="image/*"
+      :label="$t('action.uploadPhoto')"
+      :loading="uploading"
+      :error-messages="uploadError"
+      prepend-icon="mdi-camera"
+      @update:model-value="onPhotoSelected"
+    />
+    <v-text-field v-model="form.photo" :label="$t('field.photoFileName')" clearable />
+    <v-img v-if="form.photo" :src="photoUrl(form.photo)" max-height="160" class="mb-4" />
     <v-card-actions>
       <v-spacer />
       <v-btn variant="text" @click="$emit('cancel')">{{ $t('action.cancel') }}</v-btn>
@@ -22,8 +32,9 @@
 </template>
 
 <script setup>
-import { reactive, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { uploadPhoto } from '@/api/dataService'
 
 const props = defineProps({
   hazard: {
@@ -44,6 +55,7 @@ function emptyForm () {
     severity: 'Moderate',
     status: 'Active',
     description: '',
+    photo: '',
   }
 }
 
@@ -53,11 +65,32 @@ watch(() => props.hazard, hazard => {
   Object.assign(form, hazard ? { ...hazard } : emptyForm())
 }, { immediate: true })
 
-const hazardTypeOptions = ['Flooding', 'Landslide', 'RoadClosed', 'Other'].map(value => ({ value, text: t(`hazardType.${value}`) }))
+const hazardTypeOptions = ['Flooding', 'Landslide', 'RoadClosed', 'FallenTree', 'Pothole', 'SignalFailure', 'Other'].map(value => ({ value, text: t(`hazardType.${value}`) }))
 const severityOptions = ['Light', 'Moderate', 'Severe'].map(value => ({ value, text: t(`severity.${value}`) }))
 const statusOptions = ['Active', 'Resolved'].map(value => ({ value, text: t(`status.${value}`) }))
 
+const uploading = ref(false)
+const uploadError = ref('')
+
+async function onPhotoSelected (files) {
+  const file = Array.isArray(files) ? files[0] : files
+  if (!file) return
+  uploading.value = true
+  uploadError.value = ''
+  try {
+    form.photo = await uploadPhoto(file)
+  } catch (err) {
+    uploadError.value = err.message
+  } finally {
+    uploading.value = false
+  }
+}
+
+function photoUrl (fileName) {
+  return `${import.meta.env.BASE_URL}pic/${encodeURIComponent(fileName)}`
+}
+
 function submit () {
-  emit('submit', { ...form })
+  emit('submit', { ...form, photo: form.photo || null })
 }
 </script>

@@ -50,7 +50,8 @@ Google Maps API 密鑰設定：
 `RoadHazard`（地點/經緯度/類型/嚴重度/狀態/說明/時間）只存在一個地方：`frontend/public/data/roadHazards.json`。
 
 - **本機維護**：`backend/Services/RoadHazardService.cs` 是一個 Singleton，啟動時把這份 JSON 讀進記憶體 `List<RoadHazard>`，每次增刪改都用同一個 `lock` 保護、配發 Id（現有最大值+1），然後整份重寫回檔案。`Controllers/RoadHazardController.cs` 提供 `/api/RoadHazard` 的標準 REST 五個動作，統一包成 `Common/ApiResult<T>`（`succ/code/message/dataTime/data`，ASP.NET Core 預設用 camelCase 序列化，前端解析時注意大小寫）。
-- **正式站讀取**：`frontend/src/api/dataService.js` 的 `fetchHazards()` 在任何環境都是直接 `fetch` `${BASE_URL}data/roadHazards.json`（打包後就是 `dist/data/roadHazards.json`），**不呼叫任何 API**。`createHazard/updateHazard/removeHazard/fetchHazardsFromApi` 這幾個才會打本機後端，只有 `/manage` 頁（僅開發模式）會用到。
+- **正式站讀取**：`frontend/src/api/dataService.js` 的 `fetchHazards()` 在任何環境都是直接 `fetch` `${BASE_URL}data/roadHazards.json`（打包後就是 `dist/data/roadHazards.json`），**不呼叫任何 API**。`createHazard/updateHazard/removeHazard/uploadPhoto/fetchHazardsFromApi` 這幾個才會打本機後端，只有 `/manage` 頁（僅開發模式）會用到。
+- **照片**：`RoadHazard.Photo` 只存檔名（可為 null），實體檔案放在 `frontend/public/pic/`（建置時原封複製到 `dist/pic/`），前端一律用 `${BASE_URL}pic/檔名` 組 URL。`/manage` 表單可透過 `POST /api/Photo`（`backend/Controllers/PhotoController.cs`）上傳，後端會把檔案寫進同一個資料夾並回傳實際存檔檔名；也可以手動把檔案放進 `pic/` 再填檔名。照片跟 JSON 一樣要 `git commit/push` 才會出現在正式站。
 
 ### `/manage` 只存在於開發模式
 `frontend/src/router/index.js` 用 `if (import.meta.env.DEV)` 動態加入 `/manage` 路由，Vite 建置時這個分支會被當死碼排除，所以 `dist/` 裡完全沒有 `ManageView.vue` 的程式碼、也不會有人在正式站上看到一個打不通 API 的維護頁。改路由結構時要留意別把這個 dev-only 判斷拿掉。

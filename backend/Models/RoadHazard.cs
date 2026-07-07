@@ -7,7 +7,7 @@ public class RoadHazard
     public double Latitude { get; set; }
     public double Longitude { get; set; }
 
-    // Flooding | Landslide | RoadClosed | Other
+    // Flooding | Landslide | RoadClosed | FallenTree | Pothole | SignalFailure | Other
     public string HazardType { get; set; } = string.Empty;
 
     // Light | Moderate | Severe
@@ -17,6 +17,9 @@ public class RoadHazard
     public string Status { get; set; } = "Active";
 
     public string? Description { get; set; }
+
+    // 照片檔名（不含路徑），檔案放在 frontend/public/pic/，沒有照片時為 null。
+    public string? Photo { get; set; }
     public DateTime ReportedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

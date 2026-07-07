@@ -23,6 +23,7 @@
                 <th>{{ $t('field.hazardType') }}</th>
                 <th>{{ $t('field.severity') }}</th>
                 <th>{{ $t('field.status') }}</th>
+                <th>{{ $t('field.photo') }}</th>
                 <th>{{ $t('field.updatedAt') }}</th>
                 <th />
               </tr>
@@ -33,6 +34,9 @@
                 <td>{{ $t(`hazardType.${hazard.hazardType}`) }}</td>
                 <td>{{ $t(`severity.${hazard.severity}`) }}</td>
                 <td>{{ $t(`status.${hazard.status}`) }}</td>
+                <td>
+                  <img v-if="hazard.photo" :src="photoUrl(hazard.photo)" :alt="hazard.photo" class="photo-thumb">
+                </td>
                 <td>{{ new Date(hazard.updatedAt).toLocaleString('zh-TW') }}</td>
                 <td>
                   <v-btn size="small" variant="text" @click="editing = hazard">{{ $t('action.edit') }}</v-btn>
@@ -87,5 +91,17 @@ async function onDelete (id) {
   }
 }
 
+function photoUrl (fileName) {
+  return `${import.meta.env.BASE_URL}pic/${encodeURIComponent(fileName)}`
+}
+
 onMounted(load)
 </script>
+
+<style scoped>
+.photo-thumb {
+  display: block;
+  max-height: 40px;
+  border-radius: 4px;
+}
+</style>

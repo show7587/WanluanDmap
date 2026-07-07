@@ -128,6 +128,7 @@ public class RoadHazardService : IRoadHazardService
                 existing.Severity = entity.Severity;
                 existing.Status = entity.Status;
                 existing.Description = entity.Description;
+                existing.Photo = entity.Photo;
                 existing.UpdatedAt = DateTime.Now;
                 SaveToFile();
             }

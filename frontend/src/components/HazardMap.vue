@@ -18,6 +18,12 @@
             ／<strong>{{ $t('field.severity') }}：</strong>{{ $t(`severity.${hazard.severity}`) }}
           </p>
           <p v-if="hazard.description">{{ hazard.description }}</p>
+          <img
+            v-if="hazard.photo"
+            :src="photoUrl(hazard.photo)"
+            :alt="hazard.location"
+            class="hazard-photo"
+          >
           <p class="hazard-time">{{ $t('field.updatedAt') }}：{{ formatDateTime(hazard.updatedAt) }}</p>
         </div>
       </InfoWindow>
@@ -45,6 +51,9 @@ const iconStyleByType = {
   Flooding: { color: '#1e88e5', glyph: '\u{1F30A}' }, // 藍色 + 海浪
   Landslide: { color: '#fb8c00', glyph: '\u26A0' }, // 橙色 + 警告
   RoadClosed: { color: '#e53935', glyph: '\u26D4' }, // 紅色 + 禁止
+  FallenTree: { color: '#43a047', glyph: '\u{1F333}' }, // 綠色 + 樹木
+  Pothole: { color: '#6d4c41', glyph: '\u{1F573}️' }, // 棕色 + 坑洞
+  SignalFailure: { color: '#5e35b1', glyph: '\u{1F6A6}' }, // 紫色 + 紅綠燈
   Other: { color: '#fdd835', glyph: '!' }, // 黃色 + 驚嘆號
 }
 
@@ -68,6 +77,10 @@ function markerOptions (hazard) {
   }
 }
 
+function photoUrl (fileName) {
+  return `${import.meta.env.BASE_URL}pic/${encodeURIComponent(fileName)}`
+}
+
 function formatDateTime (value) {
   if (!value) return ''
   return new Date(value).toLocaleString('zh-TW')
@@ -77,6 +90,12 @@ function formatDateTime (value) {
 <style scoped>
 .hazard-info {
   max-width: 240px;
+}
+.hazard-photo {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 8px;
 }
 .hazard-time {
   color: #666;
