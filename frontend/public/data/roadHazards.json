@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "location": "萬巒橋",
+    "latitude": 22.5652,
+    "longitude": 120.5762,
+    "hazardType": "Flooding",
+    "severity": "Moderate",
+    "status": "Active",
+    "description": "橋面積水，請改道行駛。",
+    "reportedAt": "2026-07-07T08:00:00",
+    "updatedAt": "2026-07-07T08:00:00"
+  },
+  {
+    "id": 2,
+    "location": "台1線 萬巒段",
+    "latitude": 22.5589,
+    "longitude": 120.5701,
+    "hazardType": "Landslide",
+    "severity": "Severe",
+    "status": "Active",
+    "description": "邊坡崩塌，全線封閉，請勿通行。",
+    "reportedAt": "2026-07-07T09:30:00",
+    "updatedAt": "2026-07-07T09:30:00"
+  },
+  {
+    "id": 3,
+    "location": "萬巒大橋",
+    "latitude": 22.579337355603528,
+    "longitude": 120.5638296994881,
+    "hazardType": "RoadClosed",
+    "severity": "Moderate",
+    "status": "Active",
+    "description": "溪水暴漲",
+    "reportedAt": "2026-07-07T14:24:18.3850305+08:00",
+    "updatedAt": "2026-07-07T14:24:59.4517211+08:00"
+  }
+]

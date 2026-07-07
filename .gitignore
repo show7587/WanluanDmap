@@ -1,0 +1,15 @@
+# Vue / Node
+frontend/node_modules/
+frontend/dist/
+
+# .NET Core
+backend/bin/
+backend/obj/
+backend/*.user
+backend/.vs/
+backend/appsettings.Development.json
+
+# Environment files (contain local secrets, e.g. Google Maps API key)
+frontend/.env.development
+frontend/.env.development.local
+frontend/.env.local

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ESNext",
+    "baseUrl": ".",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
