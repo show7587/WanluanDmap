@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d6e63"/>
+      <stop offset="1" stop-color="#4e342e"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" fill="url(#bg)"/>
+  <text x="320" y="200" font-size="150" text-anchor="middle" dominant-baseline="central">&#x1F573;&#xFE0F;</text>
+  <text x="320" y="330" font-size="44" fill="#ffffff" font-family="sans-serif" font-weight="bold" text-anchor="middle">道路坑洞</text>
+  <text x="320" y="382" font-size="24" fill="#efebe9" font-family="sans-serif" text-anchor="middle">範例照片（示意）</text>
+</svg>
