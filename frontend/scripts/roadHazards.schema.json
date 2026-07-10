@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "萬巒鄉路況災情資料",
+  "description": "frontend/public/data/roadHazards.json 的格式定義。編輯器（VS Code / github.dev）靠 .vscode/settings.json 的關聯拿到即時驗證；CI 的驗證邏輯在 scripts/validate-data.mjs。合法值清單要與 frontend/src/constants/hazards.js 同步。",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "location",
+      "latitude",
+      "longitude",
+      "hazardType",
+      "severity",
+      "status",
+      "description",
+      "photo",
+      "reportedAt",
+      "updatedAt"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "流水號，新增時取現有最大值 +1，不可重複。"
+      },
+      "location": {
+        "type": "string",
+        "minLength": 1,
+        "description": "地點或路段名稱，例如「萬巒橋」、「台1線 萬巒段」。"
+      },
+      "latitude": {
+        "type": "number",
+        "minimum": 22.3,
+        "maximum": 22.8,
+        "description": "緯度（萬巒鄉約 22.5x）。Google Maps 長按地點可複製「緯度, 經度」。"
+      },
+      "longitude": {
+        "type": "number",
+        "minimum": 120.3,
+        "maximum": 120.9,
+        "description": "經度（萬巒鄉約 120.5x）。數字比緯度大，填反了驗證會擋下來。"
+      },
+      "hazardType": {
+        "enum": ["Flooding", "Landslide", "RoadClosed", "FallenTree", "Pothole", "SignalFailure", "Other"],
+        "description": "災害類型：Flooding 淹水／Landslide 崩塌／RoadClosed 禁止通行／FallenTree 路樹倒塌／Pothole 道路坑洞／SignalFailure 號誌故障／Other 其他。"
+      },
+      "severity": {
+        "enum": ["Light", "Moderate", "Severe"],
+        "description": "嚴重程度：Light 輕微／Moderate 中度／Severe 嚴重。"
+      },
+      "status": {
+        "enum": ["Active", "Resolved"],
+        "description": "狀態：Active 生效中（會顯示在地圖上）／Resolved 已排除。"
+      },
+      "description": {
+        "type": ["string", "null"],
+        "description": "給民眾看的說明文字，沒有就填 null。"
+      },
+      "photo": {
+        "type": ["string", "null"],
+        "description": "照片檔名（不含路徑），檔案要放在 frontend/public/pic/ 並一起 commit；沒有照片填 null。"
+      },
+      "reportedAt": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}",
+        "description": "回報時間，建議格式：2026-07-10T14:30:00+08:00。"
+      },
+      "updatedAt": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}",
+        "description": "最後更新時間（地圖上的「資料更新時間」取所有資料中最新的這個值），建議格式：2026-07-10T14:30:00+08:00。"
+      }
+    }
+  }
+}

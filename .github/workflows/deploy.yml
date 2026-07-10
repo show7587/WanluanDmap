@@ -30,6 +30,11 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      # 資料檔是手動維護的，先驗過再建置，避免把壞掉的 JSON 部署上線。
+      - name: Validate road hazard data
+        working-directory: frontend
+        run: npm run validate:data
+
       - name: Build
         working-directory: frontend
         env:

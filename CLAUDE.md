@@ -53,6 +53,11 @@ Google Maps API 密鑰設定：
 - **正式站讀取**：`frontend/src/api/dataService.js` 的 `fetchHazards()` 在任何環境都是直接 `fetch` `${BASE_URL}data/roadHazards.json`（打包後就是 `dist/data/roadHazards.json`），**不呼叫任何 API**。`createHazard/updateHazard/removeHazard/uploadPhoto/fetchHazardsFromApi` 這幾個才會打本機後端，只有 `/manage` 頁（僅開發模式）會用到。
 - **照片**：`RoadHazard.Photo` 只存檔名（可為 null），實體檔案放在 `frontend/public/pic/`（建置時原封複製到 `dist/pic/`），前端一律用 `${BASE_URL}pic/檔名` 組 URL。`/manage` 表單可透過 `POST /api/Photo`（`backend/Controllers/PhotoController.cs`）上傳，後端會把檔案寫進同一個資料夾並回傳實際存檔檔名；也可以手動把檔案放進 `pic/` 再填檔名。照片跟 JSON 一樣要 `git commit/push` 才會出現在正式站。
 
+### 災害列舉值與資料驗證
+`hazardType`/`severity`/`status` 的合法值清單，前端唯一來源是 `frontend/src/constants/hazards.js`——地圖圖釘與圖例（`HazardMap.vue`）、`/manage` 表單（`HazardForm.vue`）、CI 資料驗證腳本（`frontend/scripts/validate-data.mjs`）都 import 這一份。新增災害類型時，還有三個地方要手動同步：`frontend/src/plugins/i18n.js`（中文名稱）、`frontend/scripts/roadHazards.schema.json`（給 VS Code/github.dev 即時驗證用，靠 `.vscode/settings.json` 的 `json.schemas` 關聯到資料檔）、`backend/Models/RoadHazard.cs` 的註解。
+
+資料檔 `roadHazards.json` 是手動編輯的（維護流程見 README.md），所以 CI 在部署前會跑 `npm run validate:data` 驗證格式、列舉值、座標範圍、照片檔案存在與時間合理性；驗證失敗就不會部署，正式站維持上一版。
+
 ### `/manage` 只存在於開發模式
 `frontend/src/router/index.js` 用 `if (import.meta.env.DEV)` 動態加入 `/manage` 路由，Vite 建置時這個分支會被當死碼排除，所以 `dist/` 裡完全沒有 `ManageView.vue` 的程式碼、也不會有人在正式站上看到一個打不通 API 的維護頁。改路由結構時要留意別把這個 dev-only 判斷拿掉。
 

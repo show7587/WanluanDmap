@@ -5,5 +5,14 @@
         "**/node_modules": true,
         "**/dist": true
     },
-    "eslint.workingDirectories": ["frontend"]
+    "eslint.workingDirectories": [
+        "frontend"
+    ],
+    // 讓 VS Code（含 github.dev 網頁版）在編輯路況資料檔時即時驗證與自動補全。
+    "json.schemas": [
+        {
+            "fileMatch": ["/frontend/public/data/roadHazards.json"],
+            "url": "./frontend/scripts/roadHazards.schema.json"
+        }
+    ]
 }
