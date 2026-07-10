@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
-        Title = "WanluanDmap API (local data maintenance only)",
+        Title = "萬巒鄉巴威颱風路況地圖 API (local data maintenance only)",
         Version = "v1"
     });
 });
@@ -35,7 +35,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "WanluanDmap API v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "萬巒鄉巴威颱風路況地圖 API v1");
     options.RoutePrefix = string.Empty;
 });
 
