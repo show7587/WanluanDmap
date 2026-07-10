@@ -35,6 +35,7 @@
 import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uploadPhoto } from '@/api/dataService'
+import { HAZARD_TYPES, SEVERITIES, STATUSES } from '@/constants/hazards'
 
 const props = defineProps({
   hazard: {
@@ -65,9 +66,9 @@ watch(() => props.hazard, hazard => {
   Object.assign(form, hazard ? { ...hazard } : emptyForm())
 }, { immediate: true })
 
-const hazardTypeOptions = ['Flooding', 'Landslide', 'RoadClosed', 'FallenTree', 'Pothole', 'SignalFailure', 'Other'].map(value => ({ value, text: t(`hazardType.${value}`) }))
-const severityOptions = ['Light', 'Moderate', 'Severe'].map(value => ({ value, text: t(`severity.${value}`) }))
-const statusOptions = ['Active', 'Resolved'].map(value => ({ value, text: t(`status.${value}`) }))
+const hazardTypeOptions = HAZARD_TYPES.map(value => ({ value, text: t(`hazardType.${value}`) }))
+const severityOptions = SEVERITIES.map(value => ({ value, text: t(`severity.${value}`) }))
+const statusOptions = STATUSES.map(value => ({ value, text: t(`status.${value}`) }))
 
 const uploading = ref(false)
 const uploadError = ref('')

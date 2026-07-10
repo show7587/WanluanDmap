@@ -28,34 +28,47 @@
         </div>
       </InfoWindow>
     </Marker>
+    <CustomControl position="LEFT_BOTTOM">
+      <div class="map-legend">
+        <button type="button" class="legend-toggle" @click="legendOpen = !legendOpen">
+          {{ $t('legend') }}
+          <span class="legend-chevron">{{ legendOpen ? '▾' : '▸' }}</span>
+        </button>
+        <ul v-show="legendOpen" class="legend-items">
+          <li v-for="type in HAZARD_TYPES" :key="type">
+            <span class="legend-pin" :style="{ backgroundColor: iconStyleByType[type].color }">{{ iconStyleByType[type].glyph }}</span>
+            <span>{{ $t(`hazardType.${type}`) }}</span>
+          </li>
+        </ul>
+        <p v-if="dataUpdatedAt" class="legend-updated">{{ $t('dataUpdatedAt') }}：{{ formatDateTime(dataUpdatedAt) }}</p>
+      </div>
+    </CustomControl>
   </GoogleMap>
 </template>
 
 <script setup>
-import { GoogleMap, Marker, InfoWindow } from 'vue3-google-map'
+import { ref } from 'vue'
+import { GoogleMap, Marker, InfoWindow, CustomControl } from 'vue3-google-map'
+import { HAZARD_TYPES, iconStyleByType } from '@/constants/hazards'
 
 defineProps({
   hazards: {
     type: Array,
     default: () => [],
   },
+  // 所有災情（含已排除）中最新的更新時間，由 MapView 從 store 計算後傳入。
+  dataUpdatedAt: {
+    type: Date,
+    default: null,
+  },
 })
+
+const legendOpen = ref(true)
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 // Center on Wanluan Township, Pingtung County, Taiwan.
 const center = { lat: 22.5636, lng: 120.5786 }
-
-// 每種災害類型的自訂圖示設定：底色 + 中央符號（emoji 或文字）。
-const iconStyleByType = {
-  Flooding: { color: '#1e88e5', glyph: '\u{1F30A}' }, // 藍色 + 海浪
-  Landslide: { color: '#fb8c00', glyph: '\u26A0' }, // 橙色 + 警告
-  RoadClosed: { color: '#e53935', glyph: '\u26D4' }, // 紅色 + 禁止
-  FallenTree: { color: '#43a047', glyph: '\u{1F333}' }, // 綠色 + 樹木
-  Pothole: { color: '#6d4c41', glyph: '\u{1F573}️' }, // 棕色 + 坑洞
-  SignalFailure: { color: '#5e35b1', glyph: '\u{1F6A6}' }, // 紫色 + 紅綠燈
-  Other: { color: '#fdd835', glyph: '!' }, // 黃色 + 驚嘆號
-}
 
 // 產生一個內嵌 SVG 的水滴形圖釘，回傳 data URI 供 Marker 的 icon 使用。
 function buildPinIcon ({ color, glyph }) {
@@ -100,5 +113,54 @@ function formatDateTime (value) {
 .hazard-time {
   color: #666;
   font-size: 0.85em;
+}
+.map-legend {
+  margin: 10px;
+  padding: 6px 10px 8px;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  color: #333;
+}
+.legend-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: bold;
+  color: inherit;
+  cursor: pointer;
+}
+.legend-items {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.legend-items li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 22px;
+}
+.legend-pin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.legend-updated {
+  margin: 6px 0 0;
+  color: #666;
+  font-size: 11px;
 }
 </style>

@@ -3,6 +3,8 @@ import { createI18n } from 'vue-i18n'
 const messages = {
   zh: {
     appTitle: '萬巒鄉颱風路況地圖',
+    legend: '圖例',
+    dataUpdatedAt: '資料更新時間',
     hazardType: {
       Flooding: '淹水',
       Landslide: '崩塌',
