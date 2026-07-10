@@ -4,6 +4,7 @@ const messages = {
   zh: {
     appTitle: '萬巒鄉颱風路況地圖',
     legend: '圖例',
+    latestHazards: '最新路況',
     dataUpdatedAt: '資料更新時間',
     hazardType: {
       Flooding: '淹水',

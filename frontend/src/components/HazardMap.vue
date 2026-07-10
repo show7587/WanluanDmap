@@ -1,5 +1,6 @@
 <template>
   <GoogleMap
+    ref="mapRef"
     :api-key="apiKey"
     style="width: 100%; height: 100%"
     :center="center"
@@ -34,12 +35,27 @@
           {{ $t('legend') }}
           <span class="legend-chevron">{{ legendOpen ? '▾' : '▸' }}</span>
         </button>
-        <ul v-show="legendOpen" class="legend-items">
-          <li v-for="type in HAZARD_TYPES" :key="type">
-            <span class="legend-pin" :style="{ backgroundColor: iconStyleByType[type].color }">{{ iconStyleByType[type].glyph }}</span>
-            <span>{{ $t(`hazardType.${type}`) }}</span>
-          </li>
-        </ul>
+        <div v-show="legendOpen">
+          <ul class="legend-items">
+            <li v-for="type in HAZARD_TYPES" :key="type">
+              <span class="legend-pin" :style="{ backgroundColor: iconStyleByType[type].color }">{{ iconStyleByType[type].glyph }}</span>
+              <span>{{ $t(`hazardType.${type}`) }}</span>
+            </li>
+          </ul>
+          <template v-if="latestHazards.length">
+            <hr class="legend-divider">
+            <p class="legend-subtitle">{{ $t('latestHazards') }}</p>
+            <ul class="legend-latest">
+              <li v-for="hazard in latestHazards" :key="hazard.id">
+                <button type="button" class="latest-item" @click="focusHazard(hazard)">
+                  <span class="legend-pin" :style="{ backgroundColor: (iconStyleByType[hazard.hazardType] || iconStyleByType.Other).color }">{{ (iconStyleByType[hazard.hazardType] || iconStyleByType.Other).glyph }}</span>
+                  <span class="latest-time">{{ formatShortTime(hazard.updatedAt) }}</span>
+                  <span class="latest-location">{{ hazard.location }}</span>
+                </button>
+              </li>
+            </ul>
+          </template>
+        </div>
         <p v-if="dataUpdatedAt" class="legend-updated">{{ $t('dataUpdatedAt') }}：{{ formatDateTime(dataUpdatedAt) }}</p>
       </div>
     </CustomControl>
@@ -47,11 +63,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { GoogleMap, Marker, InfoWindow, CustomControl } from 'vue3-google-map'
 import { HAZARD_TYPES, iconStyleByType } from '@/constants/hazards'
 
-defineProps({
+const props = defineProps({
   hazards: {
     type: Array,
     default: () => [],
@@ -64,6 +80,24 @@ defineProps({
 })
 
 const legendOpen = ref(true)
+const mapRef = ref(null)
+
+// 顯示中的災情依更新時間取最新五筆，給圖例下方的「最新路況」列表。
+const latestHazards = computed(() =>
+  [...props.hazards]
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+    .slice(0, 5),
+)
+
+// 點列表項目時把地圖平移到該災情並拉近。
+function focusHazard (hazard) {
+  const map = mapRef.value?.map
+  if (!map) return
+  map.panTo({ lat: hazard.latitude, lng: hazard.longitude })
+  if (map.getZoom() < 15) {
+    map.setZoom(15)
+  }
+}
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -97,6 +131,17 @@ function photoUrl (fileName) {
 function formatDateTime (value) {
   if (!value) return ''
   return new Date(value).toLocaleString('zh-TW')
+}
+
+// 列表用的精簡時間，例如「7/8 09:40」。
+function formatShortTime (value) {
+  return new Date(value).toLocaleString('zh-TW', {
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
 }
 </script>
 
@@ -157,6 +202,48 @@ function formatDateTime (value) {
   border-radius: 50%;
   font-size: 11px;
   flex-shrink: 0;
+}
+.legend-divider {
+  margin: 6px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+.legend-subtitle {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.legend-latest {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.latest-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 2px 0;
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.latest-item:hover .latest-location {
+  text-decoration: underline;
+}
+.latest-time {
+  color: #666;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.latest-location {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .legend-updated {
   margin: 6px 0 0;
