@@ -4,7 +4,7 @@
     :api-key="apiKey"
     style="width: 100%; height: 100%"
     :center="center"
-    :zoom="13"
+    :zoom="14"
   >
     <Marker
       v-for="hazard in hazards"
@@ -101,8 +101,9 @@ function focusHazard (hazard) {
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
-// Center on Wanluan Township, Pingtung County, Taiwan.
-const center = { lat: 22.5636, lng: 120.5786 }
+// 預設視野：中心放在萬巒市區東側（佳和一帶），讓災情集中的市區
+// 落在畫面左半、東邊涵蓋到萬金／佳佐，配 zoom 14。
+const center = { lat: 22.5768, lng: 120.5894 }
 
 // 產生一個內嵌 SVG 的水滴形圖釘，回傳 data URI 供 Marker 的 icon 使用。
 function buildPinIcon ({ color, glyph }) {
