@@ -30,21 +30,25 @@
       </InfoWindow>
     </Marker>
     <CustomControl position="LEFT_BOTTOM">
-      <div class="map-legend">
-        <button type="button" class="legend-toggle" @click="legendOpen = !legendOpen">
-          {{ $t('legend') }}
-          <span class="legend-chevron">{{ legendOpen ? '▾' : '▸' }}</span>
-        </button>
-        <div v-show="legendOpen">
-          <ul class="legend-items">
+      <div class="map-overlays">
+        <div class="overlay-card">
+          <button type="button" class="overlay-toggle" @click="legendOpen = !legendOpen">
+            {{ $t('legend') }}
+            <span class="overlay-chevron">{{ legendOpen ? '▾' : '▸' }}</span>
+          </button>
+          <ul v-show="legendOpen" class="legend-items">
             <li v-for="type in HAZARD_TYPES" :key="type">
               <span class="legend-pin" :style="{ backgroundColor: iconStyleByType[type].color }">{{ iconStyleByType[type].glyph }}</span>
               <span>{{ $t(`hazardType.${type}`) }}</span>
             </li>
           </ul>
-          <template v-if="latestHazards.length">
-            <hr class="legend-divider">
-            <p class="legend-subtitle">{{ $t('latestHazards') }}</p>
+        </div>
+        <div v-if="latestHazards.length" class="overlay-card">
+          <button type="button" class="overlay-toggle" @click="latestOpen = !latestOpen">
+            {{ $t('latestHazards') }}
+            <span class="overlay-chevron">{{ latestOpen ? '▾' : '▸' }}</span>
+          </button>
+          <div v-show="latestOpen">
             <ul class="legend-latest">
               <li v-for="hazard in latestHazards" :key="hazard.id">
                 <button type="button" class="latest-item" @click="focusHazard(hazard)">
@@ -54,9 +58,9 @@
                 </button>
               </li>
             </ul>
-          </template>
+            <p v-if="dataUpdatedAt" class="legend-updated">{{ $t('dataUpdatedAt') }}：{{ formatDateTime(dataUpdatedAt) }}</p>
+          </div>
         </div>
-        <p v-if="dataUpdatedAt" class="legend-updated">{{ $t('dataUpdatedAt') }}：{{ formatDateTime(dataUpdatedAt) }}</p>
       </div>
     </CustomControl>
   </GoogleMap>
@@ -80,6 +84,7 @@ const props = defineProps({
 })
 
 const legendOpen = ref(true)
+const latestOpen = ref(true)
 const mapRef = ref(null)
 
 // 顯示中的災情依更新時間取最新五筆，給圖例下方的「最新路況」列表。
@@ -160,8 +165,13 @@ function formatShortTime (value) {
   color: #666;
   font-size: 0.85em;
 }
-.map-legend {
+.map-overlays {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
   margin: 10px;
+}
+.overlay-card {
   padding: 6px 10px 8px;
   background: rgba(255, 255, 255, 0.94);
   border-radius: 8px;
@@ -169,7 +179,7 @@ function formatShortTime (value) {
   font-size: 12px;
   color: #333;
 }
-.legend-toggle {
+.overlay-toggle {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -204,18 +214,8 @@ function formatShortTime (value) {
   font-size: 11px;
   flex-shrink: 0;
 }
-.legend-divider {
-  margin: 6px 0;
-  border: none;
-  border-top: 1px solid #ddd;
-}
-.legend-subtitle {
-  margin: 0 0 2px;
-  font-size: 12px;
-  font-weight: bold;
-}
 .legend-latest {
-  margin: 0;
+  margin: 4px 0 0;
   padding: 0;
   list-style: none;
 }
