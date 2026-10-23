@@ -1,15 +1,1 @@
-[
-  {
-    "id": 8,
-    "location": "萬巒村民和路",
-    "latitude": 22.5766,
-    "longitude": 120.5696,
-    "hazardType": "FallenTree",
-    "severity": "Light",
-    "status": "Active",
-    "description": "有樹枝掛在電線上",
-    "photo": "S__11763716.jpg",
-    "reportedAt": "2026-07-10T23:25:56.811077+08:00",
-    "updatedAt": "2026-07-10T23:25:56.811084+08:00"
-  }
-]
+[]
