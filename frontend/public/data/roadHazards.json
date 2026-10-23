@@ -15,14 +15,14 @@
   {
     "id": 2,
     "location": "萬巒河濱休閒步道",
-    "latitude": 22.586646,
-    "longitude": 120.565869,
+    "latitude": 22.587019,
+    "longitude": 120.566452,
     "hazardType": "SignalFailure",
     "severity": "Moderate",
     "status": "Active",
     "description": "河堤邊183燈桿 爆掉了 地板都碎片",
     "photo": null,
     "reportedAt": "2026-10-23T21:15:58.482543+08:00",
-    "updatedAt": "2026-10-23T21:15:58.482559+08:00"
+    "updatedAt": "2026-10-23T21:23:02.978543+08:00"
   }
 ]
