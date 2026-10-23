@@ -14,7 +14,7 @@ WanluanDmap 顯示颱風期間屏東縣萬巒鄉的路況（淹水/崩塌/禁止
 
 ## Commands
 
-### Backend (`backend/`, .NET 8, 僅本機使用)
+### Backend (`backend/`, .NET 10, 僅本機使用)
 ```bash
 cd backend
 dotnet build
@@ -62,7 +62,7 @@ Google Maps API 密鑰設定：
 `frontend/src/router/index.js` 用 `if (import.meta.env.DEV)` 動態加入 `/manage` 路由，Vite 建置時這個分支會被當死碼排除，所以 `dist/` 裡完全沒有 `ManageView.vue` 的程式碼、也不會有人在正式站上看到一個打不通 API 的維護頁。改路由結構時要留意別把這個 dev-only 判斷拿掉。
 
 ### .NET SDK 版本解析的坑
-`backend/global.json` 和根目錄的 `global.json` **兩份都要保留**，內容相同（釘住 8.0.422）。原因：`global.json` 的 SDK 版本解析是看「執行 `dotnet` 指令時的工作目錄」，不是看專案檔位置。如果只在 `backend/` 放一份，從 repo 根目錄執行 `dotnet run --project backend` 時會找不到它，掉到本機裝的其他 SDK（此機器上曾經是 .NET 10，會直接踩到一個 Roslyn/CET 編譯器崩潰的已知問題）。兩個資料夾都要同步更新 SDK 版本。
+`backend/global.json` 和根目錄的 `global.json` **兩份都要保留**，內容相同（`10.0.100` + `rollForward: latestFeature`，會選本機最新的正式版 10.0.x SDK，不會用 preview 版）。原因：`global.json` 的 SDK 版本解析是看「執行 `dotnet` 指令時的工作目錄」，不是看專案檔位置。如果只在 `backend/` 放一份，從 repo 根目錄執行 `dotnet run --project backend` 時會找不到它，掉到本機裝的其他 SDK（曾經掉到 .NET 10 preview SDK，踩到 Roslyn/CET 編譯器崩潰的已知問題）。兩個資料夾都要同步更新 SDK 版本。
 
 ### JSON 裡的中文/全形標點不能被跳脫
 `RoadHazardService.cs` 手動設定了 `JsonSerializerOptions.Encoder`（`UnicodeRanges.BasicLatin` + `CjkUnifiedIdeographs` + `CjkSymbolsandPunctuation` + `HalfwidthandFullwidthForms`），否則 .NET 預設的 `System.Text.Json` 會把中文字和全形標點（，。）都轉成 `\uXXXX` 逃逸序列寫進檔案，讓 `roadHazards.json` 在 git diff 裡完全不可讀。新增欄位如果又用到 `System.Text.Json` 手動序列化，記得沿用這個 encoder。
