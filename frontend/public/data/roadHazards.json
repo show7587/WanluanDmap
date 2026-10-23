@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": 1,
+    "location": "褒忠路往佳興路",
+    "latitude": 22.570234,
+    "longitude": 120.58348,
+    "hazardType": "Other",
+    "severity": "Light",
+    "status": "Active",
+    "description": "萬巒鄉褒忠路往佳興路方向（靠近魚塭周邊），沿線椰子樹不時會因風勢較大，造成大片落葉掉落路面。",
+    "photo": null,
+    "reportedAt": "2026-10-23T21:03:48.962969+08:00",
+    "updatedAt": "2026-10-23T21:03:48.963014+08:00"
+  }
+]
