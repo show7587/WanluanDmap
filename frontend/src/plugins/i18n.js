@@ -2,7 +2,7 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   zh: {
-    appTitle: '萬巒鄉巴威颱風路況地圖',
+    appTitle: '萬巒鄉薔琵颱風路況地圖',
     legend: '圖例',
     latestHazards: '最新路況',
     dataUpdatedAt: '資料更新時間',

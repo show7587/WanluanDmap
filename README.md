@@ -1,6 +1,8 @@
-# WanluanDmap 萬巒鄉巴威颱風路況地圖
+# WanluanDmap 萬巒鄉颱風路況地圖
 
 顯示颱風期間屏東縣萬巒鄉的路況（淹水、崩塌、禁止通行等）給一般民眾查看。
+
+這是**階段性任務網站**：每次有颱風來就沿用同一個站，網站名稱換成當次的颱風名（例如「萬巒鄉薔琵颱風路況地圖」），路況資料從空的開始記錄；颱風過後資料留著當紀錄，下一個颱風再重來一次。換颱風的步驟見下方「[新颱風來了：切換網站](#-新颱風來了切換網站)」。
 
 正式站是 GitHub Pages 純靜態網站，**唯一的資料來源是 [`frontend/public/data/roadHazards.json`](frontend/public/data/roadHazards.json)**——改這個檔案、push 到 `main`，GitHub Actions 會自動驗證資料、重新建置並部署，約兩分鐘後生效。
 
@@ -14,11 +16,29 @@
 
 **打錯字不用怕**：CI 會先驗證資料才部署，驗證不過就不會上線，正式站會維持上一版好的內容，GitHub 也會寄信通知你。在電腦上用 VS Code（或在 GitHub 頁面按 <kbd>.</kbd> 進入 github.dev）編輯時，編輯器會即時畫紅線提示錯誤、自動補全合法值。
 
+## 🔄 新颱風來了：切換網站
+
+颱風名稱寫死在下面幾個地方，換颱風時全部改成新名字（例如把「薔琵」換成新颱風名），一起 commit 到 `main`：
+
+| 檔案 | 改什麼 | 會影響 |
+| --- | --- | --- |
+| [`frontend/index.html`](frontend/index.html) | `<title>` | 瀏覽器分頁標題 |
+| [`frontend/src/plugins/i18n.js`](frontend/src/plugins/i18n.js) | `appTitle` | 網頁上方標題列 |
+| [`backend/Program.cs`](backend/Program.cs) | Swagger 的 `Title` 與 endpoint 名稱 | 僅本機 Swagger UI（可順手改） |
+
+接著清掉上一個颱風的路況：
+
+1. 把 `frontend/public/data/roadHazards.json` 整份改成 `[]`（空陣列可以通過驗證，地圖會顯示沒有路況）。上一個颱風的資料在 git 歷史裡找得到，不用另外備份。
+2. `frontend/public/pic/` 裡上一個颱風的照片可以刪掉（JSON 已經沒有引用它們）；要留著也不影響網站。
+3. 新颱風的第一筆資料 `id` 從 `1` 開始。
+
+建議 commit 訊息：`chore: 切換為 ○○颱風`。
+
 ### 新增一筆的範本
 
 ```json
 {
-  "id": 8,
+  "id": 1,
   "location": "地點或路段名稱",
   "latitude": 22.5636,
   "longitude": 120.5786,

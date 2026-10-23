@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 WanluanDmap 顯示颱風期間屏東縣萬巒鄉的路況（淹水/崩塌/禁止通行）給一般民眾查看。這是一個刻意簡化過的專案：
 
+- **這是每個颱風重複使用的階段性任務網站，不是綁定單一颱風。** 網站名稱帶有當次颱風名（如「萬巒鄉薔琵颱風路況地圖」），換颱風時改名並把 `roadHazards.json` 清成 `[]`，舊資料只留在 git 歷史。切換步驟見 README.md「新颱風來了：切換網站」。程式碼、註解、文件中提到網站時，除了下面列的名稱位置以外，不要寫死特定颱風名。
+
 - **正式環境是純靜態網站（GitHub Pages），沒有任何活的後端。** `backend/` 只在本機跑，是給資料維護人員用的小工具，不會被部署。
 - **沒有資料庫。** 唯一的資料來源是 `frontend/public/data/roadHazards.json`——本機後端讀寫這份檔案，前端正式站也是直接讀打包後的同一份檔案。修改資料的流程是：本機跑後端 + `/manage` 頁編輯 → 檔案更新 → `git commit/push` → GitHub Actions 自動重新建置部署。
 - **沒有登入機制**，因為正式站沒有後端可以驗證，加驗證也是擋假的。
@@ -69,6 +71,9 @@ Google Maps API 密鑰設定：
 
 ### GitHub Pages 部署的路徑前綴
 `vite.config.mjs` 設了 `base: '/WanluanDmap/'`（GitHub Pages 專案頁的路徑），前端所有讀靜態資源的地方都要用 `import.meta.env.BASE_URL` 組路徑，不能寫死 `/data/...`。如果 repo 改名，這裡要同步改。`.github/workflows/deploy.yml` 會在 push 到 `main` 時建置並部署到 GitHub Pages，`VITE_GOOGLE_MAPS_API_KEY` 是從 repository secret `GOOGLE_MAPS_API_KEY` 注入建置環境變數（`frontend/.env.production` 裡故意留空，本機開發用的金鑰放在會被 gitignore 的 `frontend/.env.development`）。
+
+### 颱風名稱寫死的位置
+當次颱風名只出現在三個地方，換颱風時要一起改：`frontend/index.html` 的 `<title>`、`frontend/src/plugins/i18n.js` 的 `appTitle`（`MainLayout.vue` 標題列與 `ManageView.vue` 都讀它）、`backend/Program.cs` 的 Swagger `Title`/endpoint 名稱（僅本機）。README.md 標題刻意用不含颱風名的「萬巒鄉颱風路況地圖」，不需要跟著改。新增顯示網站名稱的地方時，請讀 `appTitle`，不要再多一處寫死。
 
 ### 前端路由用 hash history
 `createWebHashHistory`（不是 `createWebHistory`），因為 GitHub Pages 靜態託管對 history 模式的 SPA 需要額外的 404 重導向技巧，而這個站只有一個真正的正式頁面，用 hash mode 最省事。
